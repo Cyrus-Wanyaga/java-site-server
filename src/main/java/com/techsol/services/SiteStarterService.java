@@ -58,7 +58,12 @@ public class SiteStarterService {
 
         try {
             while ((zipEntry = zipInputStream.getNextEntry()) != null) {
-                Path filePath = Paths.get(siteDir, zipEntry.getName());
+                String entryName = zipEntry.getName();
+
+                // Remove the first directory from the entry name
+                String normalizedEntryName = entryName.substring(entryName.indexOf("/") + 1);
+
+                Path filePath = Paths.get(siteDir, normalizedEntryName);
                 if (!zipEntry.isDirectory()) {
                     Files.createDirectories(filePath.getParent());
                     Files.copy(zipInputStream, filePath);
@@ -76,7 +81,7 @@ public class SiteStarterService {
     public String startServer(int port) {
         try {
             System.out.println("Initiating server with site dir : " + siteDir + File.separator + "build");
-            HTTPServer httpServer = new HTTPServer(siteDir + File.separator + "build", port);
+            HTTPServer httpServer = new HTTPServer(siteDir, port);
             httpServer.start();
             return "Started server successfully";
         } catch (IOException e) {
