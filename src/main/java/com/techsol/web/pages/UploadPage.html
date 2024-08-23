@@ -1,0 +1,18 @@
+<wicket:extend xmlns:wicket="http://wicket.apache.org">
+    <h1>Upload Your Site</h1>
+    <form wicket:id="uploadForm">
+        <div>
+            <label for="name">Site Name:</label>
+            <input type="text" wicket:id="name" id="name" required>
+        </div>
+        <div>
+            <label for="port">Port:</label>
+            <input type="number" wicket:id="port" id="port" required>
+        </div>
+        <div>
+            <label for="fileUpload">ZIP File:</label>
+            <input type="file" wicket:id="fileUpload" id="fileUpload" accept=".zip" required>
+        </div>
+        <button type="submit" wicket:id="submit">Upload</button>
+    </form>
+</wicket:extend>
