@@ -1,16 +1,19 @@
 package com.techsol.server;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.file.Files;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.Executors;
+
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
+import com.techsol.metrics.TrafficMonitor;
 
 public class HTTPServer {
     private final String rootDir;
@@ -34,6 +37,8 @@ public class HTTPServer {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
             String requestPath = exchange.getRequestURI().getPath();
+            String methodName = exchange.getRequestMethod();
+            String ipAddress = exchange.getRemoteAddress().getAddress().getHostAddress();
             File file = new File(rootDir, requestPath);
 
             if (file.isDirectory()) {
@@ -42,6 +47,7 @@ public class HTTPServer {
 
             if (!file.exists()) {
                 String response = "404 (Not Found)\n";
+                TrafficMonitor.logErrors(methodName, "Page Not Found", ipAddress, requestPath);
                 exchange.sendResponseHeaders(404, response.length());
                 try (OutputStream os = exchange.getResponseBody()) {
                     os.write(response.getBytes());
@@ -59,6 +65,8 @@ public class HTTPServer {
                     }
                 }
             }
+
+            TrafficMonitor.logPageVisit(methodName, requestPath, ipAddress);
         }
     }
 }
