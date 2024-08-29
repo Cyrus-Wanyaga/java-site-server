@@ -1,4 +1,53 @@
-body, html {
+:root {
+    --background-color: #f1f9f2;
+    --primary-color: #59b164;
+    --secondary-color: #a5ccd5;
+    --accent-color: #7b95c1;
+    --dark-mode-background-color: #060e07;
+    --dark-mode-text-color: #f1f9f2;
+    --text-color: #060e07;
+}
+
+body,
+html {
     margin: 0 !important;
-    background-color: gainsboro;
+    min-height: 100vh !important;
+    overflow-x: hidden;
+    width: 100vw;
+    color: var(--text-color) !important;
+    font-family: "Rubik", sans-serif !important;
+    background-color: var(--background-color) !important;
+    /* background-image: url('./lights.jpg') !important; */
+}
+
+.navbar {
+    background-color: var(--primary-color) !important;
+}
+
+.bg-body-tertiary {
+    background-color: var(--primary-color) !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    margin: 0px !important;
+}
+
+.card-body {
+    position: relative;
+}
+
+.card img {
+    width: 64px;
+    height: 64px;
+    position: absolute;
+    z-index: 1;
+    opacity: 10%;
+    top: 0;
+    left: 0;
 }
