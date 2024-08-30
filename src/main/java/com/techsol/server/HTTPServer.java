@@ -40,8 +40,11 @@ public class HTTPServer {
             String methodName = exchange.getRequestMethod();
             String ipAddress = exchange.getRemoteAddress().getAddress().getHostAddress();
             File file = new File(rootDir, requestPath);
+            System.out.printf("{\n\t\"request\":\"%s\",\n\t\"filePath\":\"%s\"\n}\n", requestPath,
+                    file.getAbsolutePath());
 
             if (file.isDirectory()) {
+                System.out.println("The file is a directory");
                 file = new File(file, "index.html");
             }
 
@@ -57,7 +60,7 @@ public class HTTPServer {
                 exchange.getResponseHeaders().set("Content-Type", contentType);
                 exchange.sendResponseHeaders(200, file.length());
                 try (OutputStream os = exchange.getResponseBody();
-                     FileInputStream fs = new FileInputStream(file)) {
+                        FileInputStream fs = new FileInputStream(file)) {
                     final byte[] buffer = new byte[0x10000];
                     int count;
                     while ((count = fs.read(buffer)) >= 0) {
@@ -70,5 +73,3 @@ public class HTTPServer {
         }
     }
 }
-
-
