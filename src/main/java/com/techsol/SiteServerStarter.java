@@ -2,7 +2,7 @@ package com.techsol;
 
 import java.io.IOException;
 
-import com.techsol.metrics.TrafficMonitor;
+import com.techsol.metrics.MetricsCollector;
 
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
@@ -14,8 +14,9 @@ public class SiteServerStarter implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         System.out.println("Site server application started");
         try {
+            MetricsCollector.initHistogramLabelValues();
             System.out.println("Attempting to start the metrics REST server");
-            TrafficMonitor.init();
+            MetricsCollector.init();
             System.out.println("Started metrics REST server successfully");
         } catch (IOException e) {
             System.out.println("Failed to start metrics REST server");

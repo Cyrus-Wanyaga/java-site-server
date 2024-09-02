@@ -6,14 +6,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.file.Files;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.concurrent.Executors;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import com.techsol.metrics.TrafficMonitor;
+import com.techsol.metrics.MetricsCollector;
 
 public class HTTPServer {
     private final String rootDir;
@@ -50,7 +48,7 @@ public class HTTPServer {
 
             if (!file.exists()) {
                 String response = "404 (Not Found)\n";
-                TrafficMonitor.logErrors(methodName, "Page Not Found", ipAddress, requestPath);
+                MetricsCollector.logErrors(methodName, "Page Not Found", ipAddress, requestPath);
                 exchange.sendResponseHeaders(404, response.length());
                 try (OutputStream os = exchange.getResponseBody()) {
                     os.write(response.getBytes());
@@ -69,7 +67,10 @@ public class HTTPServer {
                 }
             }
 
-            TrafficMonitor.logPageVisit(methodName, requestPath, ipAddress);
+            if (!requestPath.contains(".css") && !requestPath.contains(".js") && !requestPath.contains(".webp")
+                    && !requestPath.contains(".svg")) {
+                MetricsCollector.logPageVisit(methodName, requestPath, ipAddress);
+            }
         }
     }
 }
